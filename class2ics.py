@@ -10,7 +10,7 @@ import datetime
 import re
 
 classTime = [600000, 80000, 100000, 140000, 160000, 190000]
-weekFormat = [None, 'MO', 'TU', 'WE', 'TH', 'FR', 'SU']
+weekFormat = [None, 'MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
 
 def getWeb(info):
     s = requests.session()
