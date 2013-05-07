@@ -95,7 +95,7 @@ def outputICS(classDataList, info):
 
 
 def main():
-    schoolStart = datetime.date(*(2013, 0o2, 25))
+    schoolStart = datetime.date(*(2013, 2, 25))
     info = {'semester': 20122, 'class': '软件1291', 'schoolStart': schoolStart}
     table = getWeb(info)
     strClass = analyzeWeb(table)
