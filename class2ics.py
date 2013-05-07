@@ -35,7 +35,7 @@ def analyzeWeb(table):
         tds = trs[whichClass].find_all('td')
         for whichWeek in range(1, len(tds)):
             c = tds[whichWeek].contents[0].contents[0].strip()
-            for c in c.split(u'★'):
+            for c in c.split('★'):
                 if c: 
                     strClass.append(' '.join((str(whichWeek), str(whichClass), c, )))
     #for i in strClass:
@@ -46,7 +46,7 @@ def analyzeClass(strClass, info):
     #1 1 思想道德修养与法律基础  诚毅8-301 陈丽云 1-15
     classDataList = []
     for eachClass in strClass:
-        eachClass = eachClass.encode('utf-8')
+        eachClass = eachClass
         eachClass = re.sub('\(.+?\)', '', eachClass)
         s = eachClass.split(' ')
         w = re.findall('\d+', s[6])
@@ -95,7 +95,7 @@ def outputICS(classDataList, info):
 
 
 def main():
-    schoolStart = datetime.date(*(2013, 02, 25))
+    schoolStart = datetime.date(*(2013, 0o2, 25))
     info = {'semester': 20122, 'class': '软件1291', 'schoolStart': schoolStart}
     table = getWeb(info)
     strClass = analyzeWeb(table)
