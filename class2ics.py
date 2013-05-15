@@ -66,7 +66,7 @@ def analyzeClass(strClass, info):
                      'endTime': classTime[int(s[1])]+20000,
                      'location': s[4],
                      'startData': startData,
-                     'count': str(endWeek-startWeek+1),
+                     'count': str(int(((endWeek-startWeek)/interval)+1)),
                      'interval': str(interval)
                     }
         classDataList.append(classData)
@@ -96,7 +96,7 @@ def outputICS(classDataList, info):
 
 def main():
     schoolStart = datetime.date(*(2013, 2, 25))
-    info = {'semester': 20122, 'class': '软件1291', 'schoolStart': schoolStart}
+    info = {'semester': 20122, 'class': '电子1292', 'schoolStart': schoolStart}
     table = getWeb(info)
     strClass = analyzeWeb(table)
     classDataList = analyzeClass(strClass, info)
