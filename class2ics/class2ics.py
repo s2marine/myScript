@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- encoding:utf-8 -*-
 '''
 从集美大学教务处在线获取课表生成为ics日历文件
@@ -96,7 +96,7 @@ def outputICS(classDataList, info):
 
 def main():
     schoolStart = datetime.date(*(2013, 2, 25))
-    info = {'semester': 20122, 'class': '电子1292', 'schoolStart': schoolStart}
+    info = {'semester': 20122, 'class': '软件1292', 'schoolStart': schoolStart}
     table = getWeb(info)
     strClass = analyzeWeb(table)
     classDataList = analyzeClass(strClass, info)
