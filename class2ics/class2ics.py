@@ -14,7 +14,7 @@ weekFormat = [None, 'MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
 
 def getWeb(info):
     s = requests.session()
-    r = s.get("http://jwgl2.jmu.edu.cn/ViewSchedule/ViewClassSchedule.aspx")
+    r = s.get("http://cyjwgl.jmu.edu.cn/ViewSchedule/ViewClassSchedule.aspx")
     #open('t.html', 'w').write(r.content)
     soup = BeautifulSoup(r.content)
     inputList = soup.find_all('input')
@@ -23,7 +23,7 @@ def getWeb(info):
     postData["ctl00$ContentPlaceHolder1$SemesterSelect$semesterList"] = info['semester']
     postData["ctl00$ContentPlaceHolder1$ClassFilter$ClassText"] = info['class']
     postData["ctl00$ContentPlaceHolder1$ViewSchedule"] = "查询课表"
-    r = s.post("http://jwgl2.jmu.edu.cn/ViewSchedule/ViewClassSchedule.aspx", postData)
+    r = s.post("http://cyjwgl.jmu.edu.cn/ViewSchedule/ViewClassSchedule.aspx", postData)
     #open('t.html', 'w').write(r.content)
     soup = BeautifulSoup(r.content)
     return soup.find('table', id="ctl00_ContentPlaceHolder3_ScheduleTable")
@@ -95,11 +95,12 @@ def outputICS(classDataList, info):
 
 
 def main():
-    schoolStart = datetime.date(*(2013, 2, 25))
-    info = {'semester': 20122, 'class': '软件1292', 'schoolStart': schoolStart}
+    schoolStart = datetime.date(*(2013, 9, 2))
+    info = {'semester': 20131, 'class': '软件1292', 'schoolStart': schoolStart}
     table = getWeb(info)
     strClass = analyzeWeb(table)
     classDataList = analyzeClass(strClass, info)
+    print(classDataList)
     outputICS(classDataList, info)
 
 if __name__=='__main__':
