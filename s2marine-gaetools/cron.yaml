@@ -1,0 +1,8 @@
+cron:
+- description: updata 3DM RSS
+  url: /RSS/3DMUpdata
+  schedule: every 1 hours
+- description: updata bilibili RSS
+  url: /RSS/bilibiliUpdata
+  schedule: every day 08:00
+  timezone: Asia/Taipei
