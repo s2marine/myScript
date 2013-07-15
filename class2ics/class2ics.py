@@ -48,6 +48,8 @@ def analyzeClass(strClass, info):
     for eachClass in strClass:
         eachClass = eachClass
         eachClass = re.sub('\(.+?\)', '', eachClass)
+        eachClass = re.sub('（.+?）', '', eachClass)
+        eachClass = re.sub('【.+?】', '', eachClass)
         s = eachClass.split(' ')
         w = re.findall('\d+', s[6])
         startWeek = int(w[0])
