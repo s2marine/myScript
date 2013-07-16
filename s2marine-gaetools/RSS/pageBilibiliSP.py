@@ -16,12 +16,16 @@ class pageBilibiliSP(webapp2.RequestHandler):
 
     def getRSS(self):
         src = urllib2.urlopen(self.url).read()
-        spid = re.search('var spid = "(\d+?)"', src).group(1)
+        spid = re.search('var spid ?= ?"(\d+?)"', src).group(1)
+        isbangumi = re.search('var isbangumi ?= ?"(\d+?)"', src).group(1)
         soup = BeautifulSoup.BeautifulSoup(src)
         title = soup.find('h1').text
         description = soup.find('p', attrs={'id':'info-desc'}).text
         
-        addNewUrl = 'http://www.bilibili.tv/sppage/ad-new-'+spid+'-1.html'
+        if isbangumi=='0':
+            addNewUrl = 'http://www.bilibili.tv/sppage/ad-new-'+spid+'-1.html'
+        elif isbangumi=='1':
+            addNewUrl = 'http://www.bilibili.tv/sppage/bangumi-'+spid+'-1.html'
         src = urllib2.urlopen(addNewUrl).read()
         soup = BeautifulSoup.BeautifulSoup(src)
 
