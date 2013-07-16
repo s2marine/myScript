@@ -1,8 +1,8 @@
 cron:
-- description: updata 3DM RSS
-  url: /RSS/3DMUpdata
+- description: update 3DM RSS
+  url: /RSS/3DMUpdate
   schedule: every 1 hours
-- description: updata bilibili RSS
-  url: /RSS/bilibiliUpdata
+- description: update bilibili RSS
+  url: /RSS/bilibiliUpdate
   schedule: every day 08:00
   timezone: Asia/Taipei
