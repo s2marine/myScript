@@ -41,7 +41,7 @@ def UpdateCyjwb():
         database = DBCyjwb()
         database.title = i['title']
         database.link = i['link']
-        database.description = ''
+        database.description = getCyjwbPost(i['link'])
         database.put()
         count += 1
 
@@ -49,13 +49,14 @@ def UpdateCyjwb():
         deleteTimes = count-MAX_RSS_ITEM
         deleteDB = db.GqlQuery('SELECT * FROM DBCyjwb ORDER BY date LIMIT '+str(deleteTimes))
         db.delete(deleteDB)
-'''
+
 def getCyjwbPost(link):
-    source = urllib2.urlopen(link).read()
+    urlfetch.set_default_fetch_deadline(60)
+    source = urllib2.urlopen(link).read().decode('GBK')
     soup = BeautifulSoup.BeautifulSoup(source)
     post = soup.find(attrs={'id':'zoom'}).parent
-    return post.prettify()
-'''
+    return post.prettify().decode('utf-8')
+
 class pageCyjwbUpdate(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
