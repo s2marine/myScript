@@ -5,6 +5,7 @@ import BeautifulSoup
 import PyRSS2Gen
 import urllib2
 import re
+from google.appengine.api import urlfetch
 
 MAX_RSS_ITEM = 10
 
@@ -15,7 +16,9 @@ class DBCyjwb(db.Model):
     date = db.DateTimeProperty(auto_now_add=True)
 
 def UpdateCyjwb():
+    urlfetch.set_default_fetch_deadline(60)
     source = urllib2.urlopen('http://cyjwb.jmu.edu.cn/lists.asp?lbm=%CD%A8%D6%AA%B9%AB%B8%E6').read()
+    #source = urlfetch.fetch('http://cyjwb.jmu.edu.cn/lists.asp?lbm=%CD%A8%D6%AA%B9%AB%B8%E6').content
     soup = BeautifulSoup.BeautifulSoup(source)
     newList = soup.findAll('table')[2].findAll('a', attrs={'target':'_blank'})
 

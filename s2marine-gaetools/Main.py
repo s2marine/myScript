@@ -10,8 +10,6 @@ from RSS.pageBilibiliSP import pageBilibiliSP
 from RSS.pageDuanziEveryday import pageDuanziEveryday
 from Add2Pocket import Add2Pocket
 from RSS.pageCyjwbUpdate import UpdateCyjwb
-from google.appengine.api import urlfetch
-urlfetch.set_default_fetch_deadline(700)
 
 class pageMain(webapp2.RequestHandler):
     def get(self):
