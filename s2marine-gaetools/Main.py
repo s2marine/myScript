@@ -2,6 +2,7 @@
 import webapp2
 from page404 import page404
 from RSS.page3DM import page3DM
+from RSS.pageCyjwb import pageCyjwb
 from RSS.pageBilibili import pageBilibili
 from RSS.page3DMUpdate import page3DMUpdate
 from RSS.pageBilibiliUpdate import pageBilibiliUpdate
@@ -18,10 +19,11 @@ class pageMain(webapp2.RequestHandler):
 class mainUpdate(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
-        result = UpdateCyjwb()
-        self.response.out.write(result)
+        UpdateCyjwb()
+        self.response.out.write('update')
 
 app = webapp2.WSGIApplication([('/RSS/3DM', page3DM),
+                               ('/RSS/cyjwb', pageCyjwb),
                                ('/RSS/bilibili', pageBilibili),
                                ('/RSS/bilibiliSP', pageBilibiliSP),
                                ('/RSS/bilibiliUpdate', pageBilibiliUpdate),
