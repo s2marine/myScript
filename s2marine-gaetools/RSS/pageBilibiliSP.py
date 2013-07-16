@@ -22,7 +22,7 @@ class pageBilibiliSP(webapp2.RequestHandler):
         soup = BeautifulSoup.BeautifulSoup(src)
         title = soup.find('h1').text
         description = soup.find('p', attrs={'id':'info-desc'}).text
-        seasonIds = [i['season_id'] for i in soup.find(attrs={'id':'season_selector'}).findAll('li')]
+        seasonIds = [] if isbangumi=='0' else [i['season_id'] for i in soup.find(attrs={'id':'season_selector'}).findAll('li')]
         
         if isbangumi=='0':
             addNewUrl = 'http://www.bilibili.tv/sppage/ad-new-'+spid
