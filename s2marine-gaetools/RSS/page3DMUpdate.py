@@ -14,7 +14,7 @@ class DB3DM(db.Model):
     description = db.TextProperty()
     date = db.DateTimeProperty(auto_now_add=True)
 
-def updata3DM():
+def Update3DM():
     source = urllib2.urlopen('http://www.3dmgame.com').read().decode('GBK')
     source = source.replace('&nbsp;', ' ')
     soup = BeautifulSoup.BeautifulSoup(source)
@@ -63,8 +63,8 @@ def get3DMPost(link):
     return post.prettify().decode('utf-8')
 '''
 
-class page3DMUpdata(webapp2.RequestHandler):
+class page3DMUpdate(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
-        updata3DM()
-        self.response.out.write('updata')
+        Update3DM()
+        self.response.out.write('Update')

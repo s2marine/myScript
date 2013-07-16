@@ -13,7 +13,7 @@ class DBBILIBILI(db.Model):
     description = db.TextProperty()
     date = db.DateTimeProperty(auto_now_add=True)
 
-def updataBilibili():
+def UpdateBilibili():
     source = urllib2.urlopen('http://www.bilibili.tv/index/ranking.json').read()
     data = json.loads(source)['hot']['list']
 
@@ -44,8 +44,8 @@ def get3DMPost(link):
     return post.prettify().decode('utf-8')
 '''
 
-class pageBilibiliUpdata(webapp2.RequestHandler):
+class pageBilibiliUpdate(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
-        updataBilibili()
-        self.response.out.write('updata')
+        UpdateBilibili()
+        self.response.out.write('Update')

@@ -1,6 +1,6 @@
 cron:
-- description: update 3DM RSS
-  url: /RSS/3DMUpdate
+- description: main update
+  url: /mainUpdate
   schedule: every 1 hours
 - description: update bilibili RSS
   url: /RSS/bilibiliUpdate
