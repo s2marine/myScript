@@ -5,8 +5,6 @@ import BeautifulSoup
 import PyRSS2Gen
 import urllib2
 import re
-from google.appengine.api import urlfetch
-urlfetch.set_default_fetch_deadline(700)
 
 MAX_RSS_ITEM = 10
 
