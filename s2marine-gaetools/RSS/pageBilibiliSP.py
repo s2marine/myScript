@@ -11,6 +11,7 @@ class pageBilibiliSP(webapp2.RequestHandler):
         if not self.url:
             self.response.out.write(u'缺少url')
             return
+        self.season_id = self.request.get('season_id')
         rss = self.getRSS()
         self.response.out.write(rss)
 
@@ -21,11 +22,18 @@ class pageBilibiliSP(webapp2.RequestHandler):
         soup = BeautifulSoup.BeautifulSoup(src)
         title = soup.find('h1').text
         description = soup.find('p', attrs={'id':'info-desc'}).text
+        seasonIds = [i['season_id'] for i in soup.find(attrs={'id':'season_selector'}).findAll('li')]
         
         if isbangumi=='0':
-            addNewUrl = 'http://www.bilibili.tv/sppage/ad-new-'+spid+'-1.html'
+            addNewUrl = 'http://www.bilibili.tv/sppage/ad-new-'+spid
         elif isbangumi=='1':
-            addNewUrl = 'http://www.bilibili.tv/sppage/bangumi-'+spid+'-1.html'
+            addNewUrl = 'http://www.bilibili.tv/sppage/bangumi-'+spid
+        if self.season_id:
+            addNewUrl += '-'+self.season_id
+        elif seasonIds:
+            addNewUrl += '-'+seasonIds[-1]
+        addNewUrl += '-1.html'
+
         src = urllib2.urlopen(addNewUrl).read()
         soup = BeautifulSoup.BeautifulSoup(src)
 

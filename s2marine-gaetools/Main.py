@@ -8,7 +8,7 @@ from RSS.pageBilibiliUpdate import pageBilibiliUpdate
 from RSS.pageBilibiliSP import pageBilibiliSP
 from RSS.pageDuanziEveryday import pageDuanziEveryday
 from Add2Pocket import Add2Pocket
-
+from RSS.pageCyjwbUpdate import UpdateCyjwb
 
 class pageMain(webapp2.RequestHandler):
     def get(self):
@@ -18,7 +18,8 @@ class pageMain(webapp2.RequestHandler):
 class mainUpdate(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
-        self.response.out.write('update')
+        result = UpdateCyjwb()
+        self.response.out.write(result)
 
 app = webapp2.WSGIApplication([('/RSS/3DM', page3DM),
                                ('/RSS/bilibili', pageBilibili),
