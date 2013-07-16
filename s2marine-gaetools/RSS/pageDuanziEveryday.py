@@ -39,7 +39,7 @@ class pageDuanziEveryday(webapp2.RequestHandler):
                     description = eachItem['object']['content']
                     ))
         rss = PyRSS2Gen.RSS2(
-            title = '一日段子荟萃',
+            title = u'一日段子荟萃',
             link ='https://plus.google.com/114955851650599222028',
             description = u'一日段子荟萃'
             )
