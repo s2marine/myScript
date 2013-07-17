@@ -6,6 +6,7 @@ import urllib2
 import urllib
 import json
 from google.appengine.api import urlfetch
+import datetime
 
 class pageBaiduPan(webapp2.RequestHandler):
     def get(self):
@@ -44,10 +45,13 @@ class pageBaiduPan(webapp2.RequestHandler):
             itemList.append(PyRSS2Gen.RSSItem(
                 title = i['server_filename'],
                 link = i['dlink'],
+                guid = PyRSS2Gen.Guid(i['dlink']), 
                 description = descriptionadd
                 ))
 
-        pageUrl = 'http://pan.baidu.com/share/link?%s' % data
+        data =  urllib.urlencode({'uk':self.uk, 'shareid':self.shareid})
+        fragment = urllib.urlencode({'path':self.path.encode('utf-8')}).replace('+', '%20')
+        pageUrl = 'http://pan.baidu.com/share/link?%s#dir/%s' % (data, fragment)
         rss = PyRSS2Gen.RSS2(
             title = self.title,
             link = pageUrl,
