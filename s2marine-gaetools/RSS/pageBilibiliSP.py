@@ -11,6 +11,9 @@ class pageBilibiliSP(webapp2.RequestHandler):
         if not self.url:
             self.response.out.write(u'缺少url')
             return
+        if "http://www.bilibili.tv/sppage/" in self.url:
+            self.response.set_status(404)
+            return
         self.season_id = self.request.get('season_id')
         rss = self.getRSS()
         self.response.out.write(rss)
