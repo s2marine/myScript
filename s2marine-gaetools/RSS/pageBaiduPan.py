@@ -5,6 +5,7 @@ import BeautifulSoup
 import urllib2
 import urllib
 import json
+from google.appengine.api import urlfetch
 
 class pageBaiduPan(webapp2.RequestHandler):
     def get(self):
@@ -25,6 +26,7 @@ class pageBaiduPan(webapp2.RequestHandler):
         self.response.out.write(rss)
 
     def getRSS(self):
+        urlfetch.set_default_fetch_deadline(60)
         jsonUrl = 'http://pan.baidu.com/share/list?%s'
         data =  urllib.urlencode({'dir':self.path.encode('utf-8'), 'uk':self.uk, 'shareid':self.shareid})
         src = urllib2.urlopen(jsonUrl % data).read()
