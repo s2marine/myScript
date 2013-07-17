@@ -7,6 +7,7 @@ from RSS.pageBilibili import pageBilibili
 from RSS.page3DMUpdate import page3DMUpdate
 from RSS.pageBilibiliUpdate import pageBilibiliUpdate
 from RSS.pageBilibiliSP import pageBilibiliSP
+from RSS.pageBaiduPan import pageBaiduPan
 from RSS.pageDuanziEveryday import pageDuanziEveryday
 from Add2Pocket import Add2Pocket
 from RSS.pageCyjwbUpdate import UpdateCyjwb
@@ -27,6 +28,7 @@ app = webapp2.WSGIApplication([('/RSS/3DM', page3DM),
                                ('/RSS/bilibili', pageBilibili),
                                ('/RSS/bilibiliSP', pageBilibiliSP),
                                ('/RSS/bilibiliUpdate', pageBilibiliUpdate),
+                               ('/RSS/baiduPan', pageBaiduPan),
                                ('/RSS/pageDuanziEveryday', pageDuanziEveryday),
                                ('/Add2Pocket', Add2Pocket),
                                ('/mainUpdate', mainUpdate),
