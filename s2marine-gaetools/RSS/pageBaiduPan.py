@@ -34,6 +34,10 @@ class pageBaiduPan(webapp2.RequestHandler):
         files = json.loads(src)['list']
         files = sorted(files, key=lambda k: k['mtime'], reverse=True)
 
+        data =  urllib.urlencode({'uk':self.uk, 'shareid':self.shareid})
+        fragment = urllib.urlencode({'path':self.path.encode('utf-8')}).replace('+', '%20')
+        pageUrl = 'http://pan.baidu.com/share/link?%s#dir/%s' % (data, fragment)
+
         itemList = []
         for i in files:
             if 'thumbs' in i:
@@ -44,14 +48,11 @@ class pageBaiduPan(webapp2.RequestHandler):
             descriptionadd += '<a href="'+i['dlink']+u'">下载</a>'
             itemList.append(PyRSS2Gen.RSSItem(
                 title = i['server_filename'],
-                link = i['dlink'],
-                guid = PyRSS2Gen.Guid(i['dlink']), 
+                link = pageUrl,
+                guid = PyRSS2Gen.Guid(i['server_filename']), 
                 description = descriptionadd
                 ))
 
-        data =  urllib.urlencode({'uk':self.uk, 'shareid':self.shareid})
-        fragment = urllib.urlencode({'path':self.path.encode('utf-8')}).replace('+', '%20')
-        pageUrl = 'http://pan.baidu.com/share/link?%s#dir/%s' % (data, fragment)
         rss = PyRSS2Gen.RSS2(
             title = self.title,
             link = pageUrl,
