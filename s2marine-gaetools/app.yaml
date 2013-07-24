@@ -1,9 +1,0 @@
-application: s2marine-gaetools
-version: 3
-runtime: python27
-api_version: 1
-threadsafe: true
-
-handlers:
-- url: /.*
-  script: Main.app

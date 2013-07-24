@@ -1,8 +1,0 @@
-cron:
-- description: main update
-  url: /mainUpdate
-  schedule: every 1 hours
-- description: update bilibili RSS
-  url: /RSS/bilibiliUpdate
-  schedule: every day 08:00
-  timezone: Asia/Taipei
