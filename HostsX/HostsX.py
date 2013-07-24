@@ -11,7 +11,7 @@ import requests
 import time
 
 hostsPath = r'/etc/hosts'
-url = 'http://hostsx.googlecode.com/svn/trunk/hosts'
+url = 'http://github.com/orzTech/HostsX/raw/master/hosts'
 http_proxy  = '127.0.0.1:8087'
 
 def getDate():
