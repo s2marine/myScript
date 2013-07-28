@@ -76,7 +76,7 @@ class RSSBilibiliSP(RSSObject):
         for i in soup.findAll('div', attrs={'class':'po'}):
             title = i.find('div', attrs={'class':'t'}).text
             link = 'http://www.bilibili.tv'+i.find('a').get('href')
-            description = unicode(i.find('img'))
+            description = '<img src="'+i.find('img').get('src')+'"/>'
             guid = 'http://www.bilibili.tv'+i.find('a').get('href')
             pubDate = datetime.datetime.strptime(i.get('tg'), '%Y-%m-%d %H:%M')
             items.append({
