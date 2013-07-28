@@ -27,6 +27,3 @@ class pageRSSCronUpdate(webapp2.RequestHandler):
                 rssObject = getattr(rssClass, "RSS"+cron.RSSName)
                 o = rssObject(cron.getUrlArgs())
                 o.cronUpdate(cron)
-                print '\n'*10
-                print cron.RSSName
-
