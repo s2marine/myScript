@@ -1,0 +1,177 @@
+# -*- encoding:utf-8 -*-
+import sys
+sys.path.append('./lib/')
+from google.appengine.ext import db
+import json
+import datetime
+import PyRSS2Gen
+
+class DBRSSCron(db.Model):
+    RSSName = db.StringProperty()
+    strUrlArgs = db.StringProperty()
+    updateInterval = db.StringProperty
+    nextUpdateTime = db.DateTimeProperty()
+
+    def setTimeNow(self):
+        self.nextUpdateTime = datetime.datetime.now()
+
+    def setNextTime(self):
+        if not self.nextUpdateTime:
+            self.setTimeNow()
+            return
+        if type(self.updateInterval) is int:
+            self.nextUpdateTime += datetime.timedelta(seconds=self.updateInterval-600)
+        elif type(self.updateInterval) is list:
+            today = datetime.date.today()
+            todayTime = datetime.datetime.combine(today, datetime.time())
+            now = datetime.datetime.now()
+            for i in self.updateInterval:
+                time = datetime.timedelta(seconds=i)
+                if todayTime+time >= now:
+                    self.nextUpdateTime = todayTime+time
+                    return 
+            nextDay = todayTime+datetime.timedelta(days=1)
+            self.nextUpdateTime = nextDay+datetime.timedelta(seconds=i)
+
+    def isTime(self):
+        now = datetime.datetime.now()
+        return now >= self.nextUpdateTime
+
+    def getUrlArgs(self):
+        return json.loads(self.strUrlArgs)
+
+    def setStrUrlArgs(self, urlArgs):
+        self.strUrlArgs = json.dumps(urlArgs, sort_keys=True)
+
+
+
+
+class DBRSSInfo(db.Model):
+    RSSName = db.StringProperty()
+    strUrlArgs = db.StringProperty()
+    title = db.StringProperty()
+    link = db.StringProperty()
+    description = db.TextProperty()
+
+class DBRSSData(db.Model):
+    RSSName = db.StringProperty()
+    strUrlArgs = db.StringProperty()
+    title = db.StringProperty()
+    link = db.StringProperty()
+    description = db.TextProperty()
+    guid = db.StringProperty()
+    pubDate = db.DateTimeProperty()
+
+class RSSObject(object):
+    '''
+    self.RSSName
+    self.strUrlArgs
+    self.urlArgs
+    self.updateInterval
+
+
+    '''
+
+
+
+
+    def __init__(self, RSSName, urlArgs, updateInterval):
+        self.RSSName = RSSName
+        self.urlArgs = urlArgs
+        self.strUrlArgs = json.dumps(self.urlArgs, sort_keys=True)
+        self.updateInterval = updateInterval
+        self.RSSData = {}
+        self.db = {'put':[], 'del':[]}
+
+    def getRSS(self):
+        self.checkDB()
+        self.initDB()
+        if self.isInDB:
+            self.getRSSDataFromDB()
+        else:
+            self.getRSSDataFromWeb()
+            self.updateNextTime()
+            self.saveDB()
+        self.setRSSOut()
+
+    def checkDB(self):
+        RSSInfos = db.GqlQuery('SELECT * FROM DBRSSInfo WHERE \
+                RSSName=:1 AND strUrlArgs=:2', 
+                self.RSSName,
+                self.strUrlArgs).fetch(None)
+        if RSSInfos:
+            self.isInDB = True
+            self.RSSInfo = RSSInfos[0]
+        else:
+            self.isInDB = False
+
+    def initDB(self):
+        if self.isInDB:
+            self.RSSDatas = db.GqlQuery('SELECT * FROM DBRSSData WHERE \
+                    RSSName=:1 AND strUrlArgs=:2 ORDER BY pubDate DESC', 
+                    self.RSSName,
+                    self.strUrlArgs).fetch(None)
+        else:
+            self.RSSCron = DBRSSCron(
+                    RSSName = self.RSSName,
+                    strUrlArgs = self.strUrlArgs,
+                    updateInterval = json.dumps(self.updateInterval),
+                    nextUpdateTime = datetime.datetime.now())
+            self.RSSInfo = DBRSSInfo(
+                    RSSName = self.RSSName,
+                    strUrlArgs = self.strUrlArgs)
+            self.RSSDatas = []
+
+
+
+
+    def getRSSDataFromDB(self):
+        self.RSSData['title'] = self.RSSInfo.title
+        self.RSSData['link'] = self.RSSInfo.link
+        self.RSSData['description'] = self.RSSInfo.description
+        self.RSSData['items'] = []
+
+        for data in self.RSSDatas:
+            self.RSSData['items'].append({
+                'title':data.title,
+                'link':data.link,
+                'description':data.description,
+                'guid':data.guid,
+                'pubDate':data.pubDate})
+
+    def setRSSOut(self):
+        rss = PyRSS2Gen.RSS2(
+                title = self.RSSData['title'], 
+                link = self.RSSData['link'], 
+                description = self.RSSData['description'],
+                items = []
+                ) 
+        for item in self.RSSData['items']:
+            rss.items.append(PyRSS2Gen.RSSItem(
+                title = item['title'], 
+                link = item['link'], 
+                description = item['description'],
+                guid = item['guid'], 
+                pubDate = item['pubDate']))
+
+        self.RSSOut = rss.to_xml('utf-8')
+
+    def getRSSDataFromWeb(self):
+        pass
+
+    def saveDB(self):
+        db.put(self.db['put'])
+        db.delete(self.db['del'])
+
+    def cronUpdate(self, RSSCron):
+        self.RSSCron = RSSCron
+        self.checkDB()
+        self.initDB()
+        if self.RSSCron.nextUpdateTime<=datetime.datetime.today():
+            self.getRSSDataFromWeb()
+            self.updateNextTime()
+            self.saveDB()
+
+    def updateNextTime(self):
+        self.RSSCron.setNextTime()
+        self.db['put'].append(self.RSSCron)
