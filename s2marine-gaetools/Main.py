@@ -6,6 +6,7 @@ import webapp2
 from page404 import page404
 from pageRSSCronUpdate import pageRSSCronUpdate
 from pageBilibiliSP import pageBilibiliSP
+from pageBilibili import pageBilibili
 from pageDuanziEveryday import pageDuanziEveryday
 
 class pageMain(webapp2.RequestHandler):
@@ -21,6 +22,7 @@ class mainUpdate(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
                                ('/RSS/cronUpdate', pageRSSCronUpdate),
                                ('/RSS/BilibiliSP', pageBilibiliSP),
+                               ('/RSS/Bilibili', pageBilibili),
                                ('/RSS/DuanziEveryday', pageDuanziEveryday),
                                ('/mainUpdate', mainUpdate),
                                ('/.+', page404),
