@@ -4,6 +4,7 @@ sys.path.append('./lib/')
 sys.path.append('./RSS/')
 import webapp2
 from page404 import page404
+from page410 import page410
 from pageRSSCronUpdate import pageRSSCronUpdate
 from pageBilibiliSP import pageBilibiliSP
 from pageBilibili import pageBilibili
@@ -22,8 +23,12 @@ class mainUpdate(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
                                ('/RSS/cronUpdate', pageRSSCronUpdate),
                                ('/RSS/BilibiliSP', pageBilibiliSP),
+                               ('/RSS/bilibiliSP', page410),
                                ('/RSS/Bilibili', pageBilibili),
+                               ('/RSS/bilibili', page410),
                                ('/RSS/DuanziEveryday', pageDuanziEveryday),
+                               ('/RSS/pageDuanziEveryday', page410),
+                               ('/RSS/baiduPan', page410),
                                ('/mainUpdate', mainUpdate),
                                ('/.+', page404),
                                ('/', pageMain)],
