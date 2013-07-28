@@ -1,0 +1,4 @@
+cron:
+- description: RSS Cron Update
+  url: /RSS/cronUpdate
+  schedule: every 1 hours
