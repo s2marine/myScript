@@ -2,6 +2,4 @@
 import webapp2
 class page404(webapp2.RequestHandler):
     def get(self):
-        self.response.set_status(404)
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.out.write('404')
+        self.abort(400, u'没有这个网站啦，求你们不要来抓了')
