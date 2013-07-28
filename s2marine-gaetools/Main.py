@@ -1,16 +1,13 @@
-#coding:utf-8
+# -*- encoding:utf-8 -*-
+import sys
+sys.path.append('./lib/')
+sys.path.append('./RSS/')
 import webapp2
 from page404 import page404
-from RSS.page3DM import page3DM
-from RSS.pageCyjwb import pageCyjwb
-from RSS.pageBilibili import pageBilibili
-from RSS.page3DMUpdate import page3DMUpdate
-from RSS.pageBilibiliUpdate import pageBilibiliUpdate
-from RSS.pageBilibiliSP import pageBilibiliSP
-from RSS.pageBaiduPan import pageBaiduPan
-from RSS.pageDuanziEveryday import pageDuanziEveryday
-from Add2Pocket import Add2Pocket
-from RSS.pageCyjwbUpdate import UpdateCyjwb
+from pageRSSCronUpdate import pageRSSCronUpdate
+from pageBilibiliSP import pageBilibiliSP
+from pageBilibili import pageBilibili
+from pageDuanziEveryday import pageDuanziEveryday
 
 class pageMain(webapp2.RequestHandler):
     def get(self):
@@ -20,18 +17,14 @@ class pageMain(webapp2.RequestHandler):
 class mainUpdate(webapp2.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'text/plain'
-        UpdateCyjwb()
         self.response.out.write('update')
 
-app = webapp2.WSGIApplication([('/RSS/3DM', page3DM),
-                               ('/RSS/cyjwb', pageCyjwb),
-                               ('/RSS/bilibili', pageBilibili),
-                               ('/RSS/bilibiliSP', pageBilibiliSP),
-                               ('/RSS/bilibiliUpdate', pageBilibiliUpdate),
-                               ('/RSS/baiduPan', pageBaiduPan),
-                               ('/RSS/pageDuanziEveryday', pageDuanziEveryday),
-                               ('/Add2Pocket', Add2Pocket),
+app = webapp2.WSGIApplication([
+                               ('/RSS/cronUpdate', pageRSSCronUpdate),
+                               ('/RSS/BilibiliSP', pageBilibiliSP),
+                               ('/RSS/Bilibili', pageBilibili),
+                               ('/RSS/DuanziEveryday', pageDuanziEveryday),
                                ('/mainUpdate', mainUpdate),
                                ('/.+', page404),
                                ('/', pageMain)],
-                              debug=True)
+                               debug=True)
