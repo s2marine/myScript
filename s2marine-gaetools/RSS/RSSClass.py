@@ -9,7 +9,7 @@ import PyRSS2Gen
 class DBRSSCron(db.Model):
     RSSName = db.StringProperty()
     strUrlArgs = db.StringProperty()
-    updateInterval = db.StringProperty
+    updateInterval = db.StringProperty()
     nextUpdateTime = db.DateTimeProperty()
 
     def setTimeNow(self):
@@ -19,19 +19,20 @@ class DBRSSCron(db.Model):
         if not self.nextUpdateTime:
             self.setTimeNow()
             return
-        if type(self.updateInterval) is int:
-            self.nextUpdateTime += datetime.timedelta(seconds=self.updateInterval-600)
-        elif type(self.updateInterval) is list:
+        updateInterval = json.loads(self.updateInterval)
+        if type(updateInterval) is int:
+            self.nextUpdateTime += datetime.timedelta(seconds=updateInterval-600)
+        elif type(updateInterval) is list:
             today = datetime.date.today()
             todayTime = datetime.datetime.combine(today, datetime.time())
             now = datetime.datetime.now()
-            for i in self.updateInterval:
+            for i in updateInterval:
                 time = datetime.timedelta(seconds=i)
                 if todayTime+time >= now:
                     self.nextUpdateTime = todayTime+time
                     return 
             nextDay = todayTime+datetime.timedelta(days=1)
-            self.nextUpdateTime = nextDay+datetime.timedelta(seconds=i)
+            self.nextUpdateTime = nextDay+datetime.timedelta(seconds=updateInterval[0])
 
     def isTime(self):
         now = datetime.datetime.now()
@@ -167,7 +168,11 @@ class RSSObject(object):
         self.RSSCron = RSSCron
         self.checkDB()
         self.initDB()
-        if self.RSSCron.nextUpdateTime<=datetime.datetime.today():
+        print '\n'*10
+        print self.RSSName
+        print datetime.datetime.now()
+        print self.RSSCron.nextUpdateTime
+        if self.RSSCron.nextUpdateTime<=datetime.datetime.now():
             self.getRSSDataFromWeb()
             self.updateNextTime()
             self.saveDB()
