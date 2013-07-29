@@ -118,6 +118,7 @@ def connectMovieInfo(movieInfos):
             item['priority'] = 4
         else:
             movieInfo['releaseDate'] = ''
+            item['priority'] = 1
 
         item['content'] = '	'.join((movieInfo['titleCN'], 
                 movieInfo['titleEN'],
