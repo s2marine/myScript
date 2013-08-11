@@ -8,10 +8,11 @@ from google.appengine.api import urlfetch
 import json
 import datetime
 import PyRSS2Gen
+#from bs4 import BeautifulSoup
 
 class MyRSS2(PyRSS2Gen.RSS2):
     def publish_extensions(self, handler, outfile):
-        outfile.write('<atom:link rel="hub" href="http://pubsubhubbub.appspot.com/" />')
+        outfile.write('<atom:link rel="hub" href="https://pubsubhubbub.appspot.com/" />\n')
 
 class DBRSSCron(db.Model):
     RSSName = db.StringProperty()
@@ -163,6 +164,9 @@ class RSSObject(object):
                 pubDate = item['pubDate']))
 
         self.RSSOut = rss.to_xml('utf-8')
+        #soup = BeautifulSoup(rss.to_xml('utf-8'))
+        #self.RSSOut = soup.prettify()
+
 
     def getRSSDataFromWeb(self):
         pass
@@ -187,7 +191,7 @@ class RSSObject(object):
         self.db['put'].append(self.RSSCron)
 
     def pushToPubsubhubbub(self):
-        hub_url = 'http://pubsubhubbub.appspot.com/'
+        hub_url = 'https://pubsubhubbub.appspot.com/'
         strUrlArgs = '&'.join([(j+'='+k).encode('utf-8') for j,k in self.urlArgs.items() if k])
         hubUrl = 'https://'+os.environ.get('HTTP_HOST')+'/RSS/'+self.RSSName+'?'+strUrlArgs
         data = urllib.urlencode({
