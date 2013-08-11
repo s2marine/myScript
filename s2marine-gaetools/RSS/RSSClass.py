@@ -1,10 +1,17 @@
 # -*- encoding:utf-8 -*-
 import sys
+import os
+import urllib
 sys.path.append('./lib/')
 from google.appengine.ext import db
+from google.appengine.api import urlfetch
 import json
 import datetime
 import PyRSS2Gen
+
+class MyRSS2(PyRSS2Gen.RSS2):
+    def publish_extensions(self, handler):
+        PyRSS2Gen._element(handler, 'atom:link', None, {'rel':'hub', 'href':'http://pubsubhubbub.appspot.com/'})
 
 class DBRSSCron(db.Model):
     RSSName = db.StringProperty()
@@ -141,7 +148,7 @@ class RSSObject(object):
                 'pubDate':data.pubDate})
 
     def setRSSOut(self):
-        rss = PyRSS2Gen.RSS2(
+        rss = MyRSS2(
                 title = self.RSSData['title'], 
                 link = self.RSSData['link'], 
                 description = self.RSSData['description'],
@@ -169,14 +176,22 @@ class RSSObject(object):
         self.checkDB()
         self.initDB()
         print '\n'*10
-        print self.RSSName
-        print datetime.datetime.now()
-        print self.RSSCron.nextUpdateTime
         if self.RSSCron.nextUpdateTime<=datetime.datetime.now():
             self.getRSSDataFromWeb()
             self.updateNextTime()
             self.saveDB()
+            self.pushToPubsubhubbub()
 
     def updateNextTime(self):
         self.RSSCron.setNextTime()
         self.db['put'].append(self.RSSCron)
+
+    def pushToPubsubhubbub(self):
+        hub_url = 'http://pubsubhubbub.appspot.com/'
+        strUrlArgs = '&'.join([(j+'='+k).encode('utf-8') for j,k in self.urlArgs.items() if k])
+        hubUrl = 'https://'+os.environ.get('HTTP_HOST')+'/RSS/'+self.RSSName+'?'+strUrlArgs
+        data = urllib.urlencode({
+            'hub.url': hubUrl,
+            'hub.mode': 'publish'})
+        response = urlfetch.fetch(hub_url, data, urlfetch.POST)
+        

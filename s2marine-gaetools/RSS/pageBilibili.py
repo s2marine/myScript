@@ -14,7 +14,7 @@ from RSSClass import *
 
 class pageBilibili(webapp2.RequestHandler):
     def get(self):
-        o = RSSBilibili('')
+        o = RSSBilibili({})
         o.getRSS()
         self.response.out.write(o.RSSOut)
 

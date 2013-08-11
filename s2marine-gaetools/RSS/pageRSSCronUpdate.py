@@ -18,7 +18,6 @@ class pageRSSCronUpdate(webapp2.RequestHandler):
     def getCronList(self):
         crons = db.GqlQuery('SELECT * FROM DBRSSCron').fetch(None)
         self.crons = crons
-        return crons
 
     def analysisCronList(self):
         for cron in self.crons:
