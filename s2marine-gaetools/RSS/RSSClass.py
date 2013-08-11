@@ -10,8 +10,8 @@ import datetime
 import PyRSS2Gen
 
 class MyRSS2(PyRSS2Gen.RSS2):
-    def publish_extensions(self, handler):
-        PyRSS2Gen._element(handler, 'atom:link', None, {'rel':'hub', 'href':'http://pubsubhubbub.appspot.com/'})
+    def publish_extensions(self, handler, outfile):
+        outfile.write('<atom:link rel="hub" href="http://pubsubhubbub.appspot.com/" />')
 
 class DBRSSCron(db.Model):
     RSSName = db.StringProperty()

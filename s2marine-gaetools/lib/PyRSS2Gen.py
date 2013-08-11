@@ -31,7 +31,7 @@ class WriteXmlMixin:
         from xml.sax import saxutils
         handler = saxutils.XMLGenerator(outfile, encoding)
         handler.startDocument()
-        self.publish(handler)
+        self.publish(handler, outfile)
         handler.endDocument()
 
     def to_xml(self, encoding = "iso-8859-1"):
@@ -325,14 +325,14 @@ class RSS2(WriteXmlMixin):
             items = []
         self.items = items
 
-    def publish(self, handler):
+    def publish(self, handler, outfile):
         handler.startElement("rss", self.rss_attrs)
         handler.startElement("channel", self.element_attrs)
         _element(handler, "title", self.title)
         _element(handler, "link", self.link)
         _element(handler, "description", self.description)
 
-        self.publish_extensions(handler)
+        self.publish_extensions(handler, outfile)
         
         _opt_element(handler, "language", self.language)
         _opt_element(handler, "copyright", self.copyright)
@@ -382,7 +382,7 @@ class RSS2(WriteXmlMixin):
         handler.endElement("channel")
         handler.endElement("rss")
 
-    def publish_extensions(self, handler):
+    def publish_extensions(self, handler, outfile):
         # Derived classes can hook into this to insert
         # output after the three required fields.
         pass
