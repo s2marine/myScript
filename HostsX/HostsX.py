@@ -35,7 +35,8 @@ def dataFilter(data, list):
     sfile.close()
 
 def main():
-    os.chdir(os.path.dirname(__file__))
+    import __main__
+    os.chdir(os.path.dirname(__main__.__file__))
     print('获取HostX数据')
     data = getDate()
     #open('try.txt', 'w').write(data)
