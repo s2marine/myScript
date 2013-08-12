@@ -2,6 +2,7 @@
 import sys
 import os
 import urllib
+import logging
 sys.path.append('./lib/')
 from google.appengine.ext import db
 from google.appengine.api import urlfetch
@@ -12,7 +13,7 @@ import PyRSS2Gen
 
 class MyRSS2(PyRSS2Gen.RSS2):
     def publish_extensions(self, handler, outfile):
-        outfile.write('<atom:link rel="hub" href="https://pubsubhubbub.appspot.com/" />\n')
+        outfile.write('<atom:link rel="hub" href="https://pubsubhubbub.appspot.com/" />')
 
 class DBRSSCron(db.Model):
     RSSName = db.StringProperty()
@@ -198,4 +199,4 @@ class RSSObject(object):
             'hub.url': hubUrl,
             'hub.mode': 'publish'})
         response = urlfetch.fetch(hub_url, data, urlfetch.POST)
-        
+        logging.info("%s code is %d" % (self.RSSName, response.status_code))
