@@ -86,6 +86,7 @@ class RSSBilibiliSP(RSSObject):
                 'guid':guid,
                 'pubDate':pubDate})
             if not guid in oldGuids:
+                self.isNew = True
                 self.db['put'].append(DBRSSData(
                     RSSName = self.RSSName,
                     strUrlArgs = self.strUrlArgs,

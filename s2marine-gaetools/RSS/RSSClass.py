@@ -86,6 +86,7 @@ class RSSObject(object):
 
 
     def __init__(self, RSSName, urlArgs, updateInterval):
+        self.isNew = False
         self.RSSName = RSSName
         self.urlArgs = urlArgs
         self.strUrlArgs = json.dumps(self.urlArgs, sort_keys=True)
@@ -185,7 +186,8 @@ class RSSObject(object):
             self.getRSSDataFromWeb()
             self.updateNextTime()
             self.saveDB()
-            self.pushToPubsubhubbub()
+            if self.isNew:
+                self.pushToPubsubhubbub()
 
     def updateNextTime(self):
         self.RSSCron.setNextTime()
