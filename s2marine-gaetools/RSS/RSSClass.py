@@ -196,9 +196,11 @@ class RSSObject(object):
     def pushToPubsubhubbub(self):
         hub_url = 'https://pubsubhubbub.appspot.com/'
         strUrlArgs = '&'.join([(j+'='+k).encode('utf-8') for j,k in self.urlArgs.items() if k])
-        hubUrl = 'https://'+os.environ.get('HTTP_HOST')+'/RSS/'+self.RSSName+'?'+strUrlArgs
+        hubUrl = 'https://'+os.environ.get('HTTP_HOST')+'/RSS/'+self.RSSName
+        if strUrlArgs:
+            hubUrl += '?'+strUrlArgs
         data = urllib.urlencode({
             'hub.url': hubUrl,
             'hub.mode': 'publish'})
         response = urlfetch.fetch(hub_url, data, urlfetch.POST)
-        logging.info("%s code is %d" % (self.RSSName, response.status_code))
+        logging.info("%s: url is %s code is %d" % (self.RSSName, hubUrl, response.status_code))

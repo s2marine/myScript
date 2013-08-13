@@ -1,5 +1,6 @@
 # -*- encoding:utf-8 -*-
 import sys
+import logging
 sys.path.append('./lib/')
 sys.path.append('./RSS/')
 import json
@@ -95,6 +96,7 @@ class RSSBilibiliSP(RSSObject):
                     description = description,
                     guid = guid,
                     pubDate = pubDate))
+                logging.info("%s: add %s" % (self.RSSName, title))
                 times += 1
             if times>=self.MAXItems:
                 break

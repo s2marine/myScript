@@ -1,5 +1,6 @@
 # -*- encoding:utf-8 -*-
 import sys
+import logging
 sys.path.append('./lib/')
 sys.path.append('./RSS/')
 import json
@@ -73,6 +74,7 @@ class RSSDuanziEveryday(RSSObject):
                         guid = guid,
                         pubDate = pubDate))
                     times += 1
+                    logging.info("%s: add %s" % (self.RSSName, title))
                 if times>=self.MAXItems:
                     break
         if len(self.RSSDatas)+times>self.MAXItems:
