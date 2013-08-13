@@ -47,6 +47,7 @@ class RSSDuanziEveryday(RSSObject):
         oldGuids = [i.guid for i in self.RSSDatas]
         items = self.RSSData['items'] = []
         times = 0
+        sumTimes = 0
         format = '%Y-%m-%dT%H:%M:%S.%fZ'
         for eachItem in reJson['items']:
             title = eachItem['title']
@@ -75,7 +76,10 @@ class RSSDuanziEveryday(RSSObject):
                         pubDate = pubDate))
                     times += 1
                     logging.info("%s: add %s" % (self.RSSName, title))
+                sumTimes += 1
                 if times>=self.MAXItems:
+                    break
+                if sumTimes>=self.MAXItems:
                     break
         if len(self.RSSDatas)+times>self.MAXItems:
             self.db['del'] += self.RSSDatas[self.MAXItems-len(self.RSSDatas)-times:]

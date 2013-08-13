@@ -46,7 +46,7 @@ class RSSBilibili(RSSObject):
         oldGuids = [i.guid for i in self.RSSDatas]
         items = self.RSSData['items'] = []
         times = 0
-        for i, data in datas.iteritems():
+        for i, data in datas.iteritems()[:self.MAXItems]:
             title = data['title']
             link = 'http://www.bilibili.tv/video/av'+str(data['aid'])+'/'
             description = '<img src="'+data['pic']+'"/>'
