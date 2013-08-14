@@ -17,7 +17,7 @@ proxy={"http":"127.0.0.1:8087"}
 
 
 def getDoubanByIMDBID(IMDBID):
-    print(sys._getframe().f_code.co_name)
+    print(sys._getframe().f_code.co_name, IMDBID)
     '''
     http://api.douban.com/v2/movie/search?q=tt1832382
     '''
@@ -26,7 +26,7 @@ def getDoubanByIMDBID(IMDBID):
     return json.loads(r.text)['subjects'][0]
 
 def getIMDBByIMDBID(IMDBID):
-    print(sys._getframe().f_code.co_name)
+    print(sys._getframe().f_code.co_name, IMDBID)
     '''
     http://www.omdbapi.com/?i=tt0119698
     '''
@@ -34,7 +34,7 @@ def getIMDBByIMDBID(IMDBID):
     return json.loads(r.text)
 
 def getTomatoesByIMDBID(IMDBID):
-    print(sys._getframe().f_code.co_name)
+    print(sys._getframe().f_code.co_name, IMDBID)
     '''
     http://api.rottentomatoes.com/api/public/v1.0/movie_alias.json?apikey=5rpbjyyuwqmyj4t97b6buft8&type=imdb&id=0816711
     '''
@@ -47,7 +47,7 @@ def getTomatoesByIMDBID(IMDBID):
         return result
 
 def getReleaseDate(titleEN, year):
-    print(sys._getframe().f_code.co_name)
+    print(sys._getframe().f_code.co_name, titleEN, year)
     '''
     http://www.blu-ray.com/search/quicksearch.php
     '''
@@ -58,11 +58,12 @@ def getReleaseDate(titleEN, year):
                 'country':'US', 
                 'keyword':titleEN
                 }, proxies=proxy)
-    soup = BeautifulSoup(r.text)
+    soup = BeautifulSoup(r.content)
     for i in soup.findAll('li'):
         strAll = i.findAll(text=True)[1].strip()
         strYear = re.search('\((\d{4})\)', strAll).group(1)
         strTitle = re.sub('\(.*?\)', '', strAll).strip()
+        print(strTitle)
         if titleEN!=strTitle or int(strYear)!=int(year):
             continue
         strTime = i.find('span').text
@@ -83,6 +84,7 @@ def getMovieInfos(movieInfos):
     result = []
     for movieInfo in movieInfos:
         IMDBID = re.search('tt\d{7}', movieInfo['content']).group()
+        print(IMDBID)
         movieInfo['IMDBID'] = IMDBID
         doubanSrc = getDoubanByIMDBID(IMDBID)
         if doubanSrc:
@@ -145,16 +147,3 @@ def main():
 
 if __name__=='__main__':
     main()
-    '''
-    j = json.dumps([{
-        "type": "item_update",
-        "args": {
-            "content": "New task text",
-            "id": "112116714"
-            }
-        }])
-    #print(j)
-    data = {'api_token':todoistToken, 'items_to_sync':j}
-    r = requests.post('http://api.todoist.com/TodoistSync/v2/sync', data=data)
-    print(r.text)
-    '''
