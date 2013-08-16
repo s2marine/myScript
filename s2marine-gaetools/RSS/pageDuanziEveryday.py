@@ -15,34 +15,25 @@ from RSSClass import *
 
 class pageDuanziEveryday(webapp2.RequestHandler):
     def get(self):
-        self.argsInit()
-        o = RSSDuanziEveryday(self.urlArgs)
+        o = RSSDuanziEveryday({})
         o.getRSS()
         self.response.out.write(o.RSSOut)
-
-    def argsInit(self):
-        whatArgsNeed = ['people', 'filterText', 'maxResults']
-        self.urlArgs = {i:self.request.get(i) for i in whatArgsNeed}
-        if not self.urlArgs['people']:
-            self.abort(400, u'缺少people参数')
-        if not self.urlArgs['filterText']:
-            self.urlArgs['filterText'] = ''
-        if not self.urlArgs['maxResults']:
-            self.urlArgs['maxResults'] = 10
 
 class RSSDuanziEveryday(RSSObject):
     def __init__(self, urlArgs):
         super(RSSDuanziEveryday, self).__init__('DuanziEveryday', urlArgs, 
                 [(21-8)*3600, (22-8)*3600, (23-8)*3600, (24-8)*3600])
         self.key = 'AIzaSyBJid1_6Art9j5bKy37XeopNxXjn3pWk08'
+        self.people = '114955851650599222028'
+        self.filterText = u'.*?段子荟萃.*\d+-\d+'
         self.MAXItems = 10
 
     def getRSSDataFromWeb(self):
-        apiUrl = 'https://www.googleapis.com/plus/v1/people/'+self.urlArgs['people']+'/activities/public?maxResults='+str(self.urlArgs['maxResults'])+'&key='+self.key
+        apiUrl = 'https://www.googleapis.com/plus/v1/people/'+self.people+'/activities/public?maxResults=50&key='+self.key
         r = requests.get(apiUrl)
         src = r.content
         r.close()
-        p = re.compile(self.urlArgs['filterText'])
+        p = re.compile(self.filterText)
         reJson = json.loads(src)
         oldGuids = [i.guid for i in self.RSSDatas]
         items = self.RSSData['items'] = []
