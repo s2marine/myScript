@@ -51,7 +51,7 @@ class RSSChengyi(RSSObject):
         p = re.compile(u'\d+-\d+-\d+ \d+:\d+:\d+')
         for i in table.findAll('a')[:-3]: #去掉最后的翻页
             title = i.text.strip()
-            link = 'http://cyjwb.jmu.edu.cn'+i.get('href')
+            link = 'http://cyjwb.jmu.edu.cn/'+i.get('href')
             description = ''
             guid = link
             if guid in oldGuids:
