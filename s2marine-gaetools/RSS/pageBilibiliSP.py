@@ -80,6 +80,7 @@ class RSSBilibiliSP(RSSObject):
             description = '<img src="'+i.find('img').get('src')+'"/>'
             guid = 'http://www.bilibili.tv'+i.find('a').get('href')
             pubDate = datetime.datetime.strptime(i.get('tg'), '%Y-%m-%d %H:%M')
+            pubDate -= datetime.timedelta(hours=8)
             items.append({
                 'title':title,
                 'link':link,

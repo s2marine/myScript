@@ -53,6 +53,7 @@ class RSSBilibili(RSSObject):
             description = '<img src="'+data['pic']+'"/>'
             guid = link
             pubDate = datetime.datetime.strptime(data['create'], '%Y-%m-%d %H:%M')
+            pubDate -= datetime.timedelta(hours=8)
             items.append({
                 'title':title,
                 'link':link,

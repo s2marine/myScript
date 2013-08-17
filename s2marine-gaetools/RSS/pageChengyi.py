@@ -58,6 +58,7 @@ class RSSChengyi(RSSObject):
                 break
             pubDateStr = p.search(i.next_sibling.next_sibling.text).group()
             pubDate = datetime.datetime.strptime(pubDateStr, '%Y-%m-%d %H:%M:%S')
+            pubDate -= datetime.timedelta(hours=8)
             waitList.append({
                 'title':title,
                 'link':link,
@@ -86,6 +87,7 @@ class RSSChengyi(RSSObject):
                 break
             pubDateStr = p.search(tds[2].text).group()
             pubDate = datetime.datetime.strptime(pubDateStr.encode('utf-8'), '%Y年%m月%d日')
+            pubDate -= datetime.timedelta(hours=8)
             waitList.append({
                 'title':title,
                 'link':link,
@@ -113,6 +115,7 @@ class RSSChengyi(RSSObject):
             if guid in oldGuids:
                 break
             pubDate = datetime.datetime.strptime(pubDateStrs[i], '%Y-%m-%d %H.%M.%S')
+            pubDate -= datetime.timedelta(hours=8)
             waitList.append({
                 'title':title,
                 'link':link,
