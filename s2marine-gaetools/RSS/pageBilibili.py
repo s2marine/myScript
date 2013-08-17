@@ -46,7 +46,8 @@ class RSSBilibili(RSSObject):
         oldGuids = [i.guid for i in self.RSSDatas]
         items = self.RSSData['items'] = []
         times = 0
-        for i, data in datas.iteritems()[:self.MAXItems]:
+        sumTimes = 0
+        for i, data in datas.iteritems():
             title = data['title']
             link = 'http://www.bilibili.tv/video/av'+str(data['aid'])+'/'
             description = '<img src="'+data['pic']+'"/>'
@@ -70,7 +71,10 @@ class RSSBilibili(RSSObject):
                     pubDate = pubDate))
                 logging.info("%s: add %s" % (self.RSSName, title))
                 times += 1
+            sumTimes += 1
             if times>=self.MAXItems:
+                break
+            if sumTimes>=self.MAXItems:
                 break
         if len(self.RSSDatas)+times>self.MAXItems:
             self.db['del'] += self.RSSDatas[self.MAXItems-len(self.RSSDatas)-times:]
