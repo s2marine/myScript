@@ -80,6 +80,7 @@ def outputICS(classDataList, info):
         f.write("BEGIN:VCALENDAR\n")
         for eachEvent in classDataList:
             f.write("BEGIN:VEVENT\n")
+            f.write("CREATED:"+datetime.datetime.now().strftime('%Y%m%dT%H%M%SZ')+"\n")
             f.write("DTSTART;TZID=Asia/Shanghai:"
                     +eachEvent['startData'].strftime('%Y%m%d')+'T'
                     +'%06d' % eachEvent['startTime']+"\n")
