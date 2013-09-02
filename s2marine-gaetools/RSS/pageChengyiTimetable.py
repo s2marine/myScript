@@ -102,7 +102,7 @@ class RSSChengyiTimetable(RSSObject):
             description = i
             guid = i
             pubDate = datetime.datetime.now()
-            pubDate -= datetime.timedelta(hours=8)
+            #pubDate -= datetime.timedelta(hours=8)
             items.append({
                 'title':title,
                 'link':link,
