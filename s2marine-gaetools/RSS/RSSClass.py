@@ -181,7 +181,6 @@ class RSSObject(object):
         self.RSSCron = RSSCron
         self.checkDB()
         self.initDB()
-        print '\n'*10
         if self.RSSCron.nextUpdateTime<=datetime.datetime.now():
             self.getRSSDataFromWeb()
             self.updateNextTime()
@@ -196,6 +195,8 @@ class RSSObject(object):
     def pushToPubsubhubbub(self):
         hub_url = 'https://pubsubhubbub.appspot.com/'
         strUrlArgs = '&'.join([(j+'='+k).encode('utf-8') for j,k in self.urlArgs.items() if k])
+        if os.environ.get('HTTP_HOST')=='127.0.0.1:8080':
+            return
         hubUrl = 'https://'+os.environ.get('HTTP_HOST')+'/RSS/'+self.RSSName
         if strUrlArgs:
             hubUrl += '?'+strUrlArgs

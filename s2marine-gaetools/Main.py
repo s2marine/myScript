@@ -10,6 +10,7 @@ from pageBilibiliSP import pageBilibiliSP
 from pageBilibili import pageBilibili
 from pageDuanziEveryday import pageDuanziEveryday
 from pageChengyi import pageChengyi
+from pageChengyiTimetable import pageChengyiTimetable
 
 class pageMain(webapp2.RequestHandler):
     def get(self):
@@ -29,6 +30,7 @@ app = webapp2.WSGIApplication([
                                ('/RSS/bilibili', page410),
                                ('/RSS/DuanziEveryday', pageDuanziEveryday),
                                ('/RSS/Chengyi', pageChengyi),
+                               ('/RSS/ChengyiTimetable', pageChengyiTimetable),
                                ('/RSS/pageDuanziEveryday', page410),
                                ('/RSS/baiduPan', page410),
                                ('/mainUpdate', mainUpdate),
