@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <title>My Movie List</title>
+        <script type='text/javascript' src='http://code.jquery.com/jquery-2.0.3.js'></script>
+        <script type='text/javascript'>
+            function callbackFunction(o) {
+                var main = document.getElementById("main");
+                var div = document.createElement("div");
+                var table = document.createElement("table");
+                div.appendChild(table);
+                var tbody = document.createElement("tbody");
+                table.appendChild(tbody);
+                for(var i=0; i<o.length; i++) {
+                    var tr = document.createElement("tr");
+                    var content = o[i]['content'];
+                    s = content.split('	');
+                    for(var j=0; j<s.length; j++) {
+                        var td = document.createElement("td");
+                        td.innerHTML = s[j];
+                        tr.appendChild(td);
+                    }
+                    tbody.appendChild(tr);
+                }
+                main.appendChild(div)
+            };
+        </script>
+    </head>
+    <body>
+        <div id="main">
+        </div>
+        <script type='text/javascript' src='http://todoist.com/API/getUncompletedItems?token=72c10592f98d5a6c605a591d5a72b97ddc137f3b&project_id=1054422&callback=callbackFunction'></script>
+        <style type='text/css'>
+            #main {
+                margin-left: auto;
+                margin-right: auto;
+                width: 80%;
+            }
+
+            table td, table th {
+                line-height: 1;
+                padding: 5; /* 'cellpadding' equivalent */
+            }
+        </style>
+    </body>
+</html>
