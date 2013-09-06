@@ -22,7 +22,7 @@ class pageChengyi(webapp2.RequestHandler):
 class RSSChengyi(RSSObject):
     def __init__(self, urlArgs):
         super(RSSChengyi, self).__init__('Chengyi', urlArgs, 3600)
-        self.MAXItems = 20
+        self.MAXItems = 60
 
     def getRSSDataFromWeb(self):
         self.RSSData['title'] = u'诚毅通知集合'
@@ -55,7 +55,7 @@ class RSSChengyi(RSSObject):
             description = ''
             guid = link
             if guid in oldGuids:
-                break
+                continue
             pubDateStr = p.search(i.next_sibling.next_sibling.text).group()
             pubDate = datetime.datetime.strptime(pubDateStr, '%Y-%m-%d %H:%M:%S')
             pubDate -= datetime.timedelta(hours=8)
@@ -84,7 +84,7 @@ class RSSChengyi(RSSObject):
             description = ''
             guid = link
             if guid in oldGuids:
-                break
+                continue
             pubDateStr = p.search(tds[2].text).group()
             pubDate = datetime.datetime.strptime(pubDateStr.encode('utf-8'), '%Y年%m月%d日')
             pubDate -= datetime.timedelta(hours=8)
@@ -113,7 +113,7 @@ class RSSChengyi(RSSObject):
             description = ''
             guid = link
             if guid in oldGuids:
-                break
+                continue
             pubDate = datetime.datetime.strptime(pubDateStrs[i], '%Y-%m-%d %H.%M.%S')
             pubDate -= datetime.timedelta(hours=8)
             waitList.append({

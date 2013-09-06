@@ -29,7 +29,7 @@ class pageChengyiTimetable(webapp2.RequestHandler):
 
 class RSSChengyiTimetable(RSSObject):
     def __init__(self, urlArgs):
-        super(RSSChengyiTimetable, self).__init__('ChengyiTimetable', urlArgs, 30*60)
+        super(RSSChengyiTimetable, self).__init__('ChengyiTimetable', urlArgs, 60*60)
         self.MAXItems = 50
 
     def getWeb(self, info):
