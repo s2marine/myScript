@@ -22,7 +22,7 @@ class pageChengyi(webapp2.RequestHandler):
 class RSSChengyi(RSSObject):
     def __init__(self, urlArgs):
         super(RSSChengyi, self).__init__('Chengyi', urlArgs, 3600)
-        self.MAXItems = 60
+        self.MAXItems = 20
 
     def getRSSDataFromWeb(self):
         self.RSSData['title'] = u'诚毅通知集合'
@@ -37,6 +37,14 @@ class RSSChengyi(RSSObject):
             self.RSSInfo.description = self.RSSData['description']
             self.db['put'].append(self.RSSInfo)
 
+        oldRSSDatas = []
+        for i in self.RSSDatas:
+            oldRSSDatas.append({
+                'title':i.title,
+                'link':i.link,
+                'description':i.description,
+                'guid':i.guid,
+                'pubDate':i.pubDate})
         oldGuids = [i.guid for i in self.RSSDatas]
 
         waitList = []
@@ -123,10 +131,15 @@ class RSSChengyi(RSSObject):
                 'guid':guid,
                 'pubDate':pubDate})
 
+        oldRSSDatas += waitList
+        oldRSSDatas = sorted(oldRSSDatas, key=lambda x:x['pubDate'], reverse = True)[:self.MAXItems]
+        allGuidForAdd = [i['guid'] for i in oldRSSDatas]
+
+
         items = self.RSSData['items'] = []
         times = 0
         sumTimes = 0
-        for i in sorted(waitList, key=lambda x:x['pubDate'])[::-1]:
+        for i in [i for i in waitList if i['guid'] in allGuidForAdd]:
             title = i['title']
             link = i['link']
             description = i['description']

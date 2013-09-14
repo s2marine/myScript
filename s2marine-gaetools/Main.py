@@ -11,6 +11,7 @@ from pageBilibili import pageBilibili
 from pageDuanziEveryday import pageDuanziEveryday
 from pageChengyi import pageChengyi
 from pageChengyiTimetable import pageChengyiTimetable
+from pagePushCheck import pagePushCheck
 
 class pageMain(webapp2.RequestHandler):
     def get(self):
@@ -22,7 +23,23 @@ class mainUpdate(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.out.write('update')
 
+class test(webapp2.RequestHandler):
+    def get(self):
+        from google.appengine.api import urlfetch
+        import urllib
+        import logging
+        hub_url = 'https://pubsubhubbub.appspot.com/'
+        hubUrl = self.request.get('url')
+        data = urllib.urlencode({
+            'hub.url': hubUrl,
+            'hub.mode': 'publish'})
+        response = urlfetch.fetch(hub_url, data, urlfetch.POST)
+        logging.info("url is %s code is %d" % (hubUrl, response.status_code))
+        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.out.write("url is %s code is %d" % (hubUrl, response.status_code))
+
 app = webapp2.WSGIApplication([
+                               ('/test', test),
                                ('/RSS/cronUpdate', pageRSSCronUpdate),
                                ('/RSS/BilibiliSP', pageBilibiliSP),
                                ('/RSS/bilibiliSP', page410),
@@ -33,6 +50,7 @@ app = webapp2.WSGIApplication([
                                ('/RSS/ChengyiTimetable', pageChengyiTimetable),
                                ('/RSS/pageDuanziEveryday', page410),
                                ('/RSS/baiduPan', page410),
+                               ('/RSS/PushCheck', pagePushCheck),
                                ('/mainUpdate', mainUpdate),
                                ('/.+', page404),
                                ('/', pageMain)],
