@@ -184,9 +184,9 @@ class RSSObject(object):
         if self.RSSCron.nextUpdateTime<=datetime.datetime.now():
             self.getRSSDataFromWeb()
             self.updateNextTime()
+            self.saveDB()
             if self.isNew:
                 self.pushToPubsubhubbub()
-            self.saveDB()
 
     def updateNextTime(self):
         self.RSSCron.setNextTime()
