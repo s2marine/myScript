@@ -85,7 +85,9 @@ class RSSObject(object):
 
 
 
-    def __init__(self, RSSName, urlArgs, updateInterval):
+    def __init__(self, handler, RSSName, urlArgs, updateInterval):
+        self.handler = handler
+        self.outPutLog = False
         self.isNew = False
         self.RSSName = RSSName
         self.urlArgs = urlArgs
@@ -93,6 +95,8 @@ class RSSObject(object):
         self.updateInterval = updateInterval
         self.RSSData = {}
         self.db = {'put':[], 'del':[]}
+        if 'pubsubhubbub' in self.handler.request.headers['User-Agent']:
+            self.outPutLog = True
 
     def getRSS(self):
         self.checkDB()
@@ -158,6 +162,8 @@ class RSSObject(object):
                 items = []
                 ) 
         for item in self.RSSData['items']:
+            if self.outPutLog:
+                logging.info("%s" % (item['title']))
             rss.items.append(PyRSS2Gen.RSSItem(
                 title = item['title'], 
                 link = item['link'], 

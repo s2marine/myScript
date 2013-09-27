@@ -16,7 +16,7 @@ from RSSClass import *
 class pageBilibiliSP(webapp2.RequestHandler):
     def get(self):
         self.argsInit()
-        o = RSSBilibiliSP(self.urlArgs)
+        o = RSSBilibiliSP(self, self.urlArgs)
         o.getRSS()
         self.response.out.write(o.RSSOut)
 
@@ -29,8 +29,8 @@ class pageBilibiliSP(webapp2.RequestHandler):
             self.abort(410, u'旧的请求方法已经失效了')
 
 class RSSBilibiliSP(RSSObject):
-    def __init__(self, urlArgs):
-        super(RSSBilibiliSP, self).__init__('BilibiliSP', urlArgs, 2*60*60)
+    def __init__(self, handler, urlArgs):
+        super(RSSBilibiliSP, self).__init__(handler, 'BilibiliSP', urlArgs, 2*60*60)
         self.MAXItems = 10
 
     def getRSSDataFromWeb(self):

@@ -17,7 +17,7 @@ from RSSClass import *
 class pageChengyiTimetable(webapp2.RequestHandler):
     def get(self):
         self.argsInit()
-        o = RSSChengyiTimetable(self.urlArgs)
+        o = RSSChengyiTimetable(self, self.urlArgs)
         o.getRSS()
         self.response.out.write(o.RSSOut)
 
@@ -28,8 +28,8 @@ class pageChengyiTimetable(webapp2.RequestHandler):
             self.abort(400, u'缺少class参数')
 
 class RSSChengyiTimetable(RSSObject):
-    def __init__(self, urlArgs):
-        super(RSSChengyiTimetable, self).__init__('ChengyiTimetable', urlArgs, 60*60)
+    def __init__(self, handler, urlArgs):
+        super(RSSChengyiTimetable, self).__init__(handler, 'ChengyiTimetable', urlArgs, 60*60)
         self.MAXItems = 50
 
     def getWeb(self, info):

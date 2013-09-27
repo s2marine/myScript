@@ -15,13 +15,13 @@ from RSSClass import *
 
 class pageDuanziEveryday(webapp2.RequestHandler):
     def get(self):
-        o = RSSDuanziEveryday({})
+        o = RSSDuanziEveryday(self, {})
         o.getRSS()
         self.response.out.write(o.RSSOut)
 
 class RSSDuanziEveryday(RSSObject):
-    def __init__(self, urlArgs):
-        super(RSSDuanziEveryday, self).__init__('DuanziEveryday', urlArgs, 
+    def __init__(self, handler, urlArgs):
+        super(RSSDuanziEveryday, self).__init__(handler, 'DuanziEveryday', urlArgs, 
                 [(21-8)*3600, (22-8)*3600, (23-8)*3600, (24-8)*3600])
         self.key = 'AIzaSyBJid1_6Art9j5bKy37XeopNxXjn3pWk08'
         self.people = '114955851650599222028'

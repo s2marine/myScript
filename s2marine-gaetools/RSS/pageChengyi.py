@@ -15,13 +15,13 @@ from RSSClass import *
 
 class pageChengyi(webapp2.RequestHandler):
     def get(self):
-        o = RSSChengyi({})
+        o = RSSChengyi(self, {})
         o.getRSS()
         self.response.out.write(o.RSSOut)
 
 class RSSChengyi(RSSObject):
-    def __init__(self, urlArgs):
-        super(RSSChengyi, self).__init__('Chengyi', urlArgs, 3600)
+    def __init__(self, handler, urlArgs):
+        super(RSSChengyi, self).__init__(handler, 'Chengyi', urlArgs, 3600)
         self.MAXItems = 20
 
     def getRSSDataFromWeb(self):

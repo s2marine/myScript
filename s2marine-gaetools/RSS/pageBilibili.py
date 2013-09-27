@@ -15,13 +15,13 @@ from RSSClass import *
 
 class pageBilibili(webapp2.RequestHandler):
     def get(self):
-        o = RSSBilibili({})
+        o = RSSBilibili(self, {})
         o.getRSS()
         self.response.out.write(o.RSSOut)
 
 class RSSBilibili(RSSObject):
-    def __init__(self, urlArgs):
-        super(RSSBilibili, self).__init__('Bilibili', urlArgs, [23*3600])
+    def __init__(self, handler, urlArgs):
+        super(RSSBilibili, self).__init__(handler, 'Bilibili', urlArgs, [23*3600])
         self.MAXItems = 20
 
     def getRSSDataFromWeb(self):
