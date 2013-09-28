@@ -24,5 +24,5 @@ class pageRSSCronUpdate(webapp2.RequestHandler):
             if cron.isTime():
                 rssClass = __import__("page"+cron.RSSName)
                 rssObject = getattr(rssClass, "RSS"+cron.RSSName)
-                o = rssObject(cron.getUrlArgs())
+                o = rssObject(self, cron.getUrlArgs())
                 o.cronUpdate(cron)
