@@ -30,6 +30,7 @@ If( $result==0 Or @error<>0 ) Then
 EndIf
 
 WinWait("集美大学认证客户端")
+Sleep(500)
 ControlClick("集美大学认证客户端", "", "Button1", "left", 1)
 WinWait("[CLASS:#32770]", "管理中心提示")
 WinClose("[LAST]")
@@ -41,8 +42,14 @@ If( $result<>0 Or @error<>0 ) Then
 	Exit(1)
 EndIf
 
-TrayTip("", "耐心等待两分钟~", 5)
-Sleep(1000*110)
+TrayTip("提示", "耐心等待两分钟~", 5, 1)
+$find = WinWait("[CLASS:#32770]", "网卡连接正常", 110)
+
+If($find) Then
+	MsgBox(16, "错误", "恭喜你，遇见了万中无一的网卡驱动错误，解决方法如下："&@CRLF&"更新网卡驱动"&@CRLF&"卸载网卡驱动再更新"&@CRLF&"重新安装原版win7"&@CRLF&"用上之前积攒的人品祈祷吧")
+	Exit(1)
+EndIf
+
 WinWait("[CLASS:#32770]", "管理中心提示")
 WinClose("[LAST]")
 
