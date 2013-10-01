@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 # -*- encoding:utf-8 -*-
-import requests
 import re
-import json
-from bs4 import BeautifulSoup
-import time
-import urllib.parse
 import sys
+import json
+import time
+import queue
+import threading
+import urllib.parse
+import requests
+from bs4 import BeautifulSoup
+
 doubanToken='0a7c06be1f447e761f74143a5dcd7b62'
 tomatoToken='5rpbjyyuwqmyj4t97b6buft8'
 todoistToken='72c10592f98d5a6c605a591d5a72b97ddc137f3b'
@@ -80,27 +83,37 @@ def getInfoFromTodoist(token, projectID):
     movieInfos = [{'id':i['id'], 'content':i['content']} for i in json.loads(r.text)]
     return movieInfos
 
-def getMovieInfos(movieInfos):
-    result = []
-    for movieInfo in movieInfos:
-        IMDBID = re.search('tt\d{7}', movieInfo['content']).group()
-        print(IMDBID)
-        movieInfo['IMDBID'] = IMDBID
-        doubanSrc = getDoubanByIMDBID(IMDBID)
-        if doubanSrc:
-            movieInfo['titleCN'] = doubanSrc['title']
-            movieInfo['douban'] = doubanSrc['rating']['average']
-        tomatoData = getTomatoesByIMDBID(IMDBID)
-        if tomatoData:
-            movieInfo['tomato'] = tomatoData['ratings']['critics_score']
-        IMDBData = getIMDBByIMDBID(IMDBID)
-        if IMDBData:
-            movieInfo['titleEN'] = IMDBData['Title']
-            movieInfo['year'] = IMDBData['Year']
-            movieInfo['IMDB'] = IMDBData['imdbRating']
-        movieInfo['releaseDate'] = getReleaseDate(movieInfo['titleEN'], movieInfo['year'])
-        result.append(movieInfo)
-    return result
+class GetMovieInfos(threading.Thread):
+    def __init__(self, input, worktype):
+        self._jobq = input
+        self._work_type = worktype
+        threading.Thread.__init__(self)
+    def run(self):
+        while not self._jobq.empty():
+            job = self._jobq.get()
+            worktype=self._work_type
+            self._process_job(job, worktype)
+    def _process_job(self, job, worktype):
+        getMovieInfo(job)
+        self._jobq.task_done()
+
+def getMovieInfo(movieInfo):
+    IMDBID = re.search('tt\d{7}', movieInfo['content']).group()
+    print(IMDBID)
+    movieInfo['IMDBID'] = IMDBID
+    doubanSrc = getDoubanByIMDBID(IMDBID)
+    if doubanSrc:
+        movieInfo['titleCN'] = doubanSrc['title']
+        movieInfo['douban'] = doubanSrc['rating']['average']
+    tomatoData = getTomatoesByIMDBID(IMDBID)
+    if tomatoData:
+        movieInfo['tomato'] = tomatoData['ratings']['critics_score']
+    IMDBData = getIMDBByIMDBID(IMDBID)
+    if IMDBData:
+        movieInfo['titleEN'] = IMDBData['Title']
+        movieInfo['year'] = IMDBData['Year']
+        movieInfo['IMDB'] = IMDBData['imdbRating']
+    movieInfo['releaseDate'] = getReleaseDate(movieInfo['titleEN'], movieInfo['year'])
 
 def connectMovieInfo(movieInfos):
     result = []
@@ -139,7 +152,12 @@ def connectMovieInfo(movieInfos):
 
 def main():
     movieInfos = getInfoFromTodoist(todoistToken, projectID)
-    movieInfos = getMovieInfos(movieInfos)
+    q = queue.Queue(0) 
+    for i in movieInfos:
+        q.put(i)
+    for x in range(10):
+        GetMovieInfos(q, x).start()
+    q.join()
     result = connectMovieInfo(movieInfos)
     j = json.dumps(result)
     data = {'api_token':todoistToken, 'items_to_sync':j}
