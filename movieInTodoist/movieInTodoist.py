@@ -64,9 +64,11 @@ def getReleaseDate(titleEN, year):
     soup = BeautifulSoup(r.content)
     for i in soup.findAll('li'):
         strAll = i.findAll(text=True)[1].strip()
-        strYear = re.search('\((\d{4})\)', strAll).group(1)
+        strYear = re.search('\((\d{4})\)', strAll)
+        if not strYear:
+            continue
+        strYear = strYear.group(1)
         strTitle = re.sub('\(.*?\)', '', strAll).strip()
-        print(strTitle)
         if titleEN!=strTitle or int(strYear)!=int(year):
             continue
         strTime = i.find('span').text
