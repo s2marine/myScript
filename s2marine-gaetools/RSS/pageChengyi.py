@@ -74,7 +74,7 @@ class RSSChengyi(RSSObject):
                     'description':description,
                     'guid':guid,
                     'pubDate':pubDate})
-        except ConnectionError:
+        except requests.exceptions.ConnectionError:
             logging.info("教务部出错")
 
         try:
