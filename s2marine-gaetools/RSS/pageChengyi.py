@@ -123,7 +123,7 @@ class RSSChengyi(RSSObject):
             pubDateStrs = [i.findAll('span')[2].text for i in div.findAll('div', attrs={'class':'list_other'})]
             for i in range(0, len(titles)):
                 title = titles[i]
-                link = 'http://cytyjys.jmu.edu.cn/'+links[i]
+                link = 'http://cytyjys.jmu.edu.cn'+links[i]
                 description = ''
                 guid = link
                 if guid in oldGuids:
