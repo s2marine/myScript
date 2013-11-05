@@ -105,7 +105,7 @@ class RSSChengyi(RSSObject):
                     'description':description,
                     'guid':guid,
                     'pubDate':pubDate})
-        except ConnectionError:
+        except requests.exceptions.ConnectionError:
             logging.info("诚毅学院出错")
 
 
@@ -136,7 +136,7 @@ class RSSChengyi(RSSObject):
                     'description':description,
                     'guid':guid,
                     'pubDate':pubDate})
-        except ConnectionError:
+        except requests.exceptions.ConnectionError:
             logging.info("体育教研部出错")
 
         oldRSSDatas += waitList
