@@ -74,7 +74,7 @@ class RSSBilibiliSP(RSSObject):
         oldGuids = [i.guid for i in self.RSSDatas]
         items = self.RSSData['items'] = []
         times = 0
-        for i in soup.findAll('div', attrs={'class':'po'})[:self.MAXItems]:
+        for i in soup.findAll('div', attrs={'class':'v'})[:self.MAXItems]:
             title = i.find('div', attrs={'class':'t'}).text
             link = 'http://www.bilibili.tv'+i.find('a').get('href')
             description = '<img src="'+i.find('img').get('src')+'"/>'
