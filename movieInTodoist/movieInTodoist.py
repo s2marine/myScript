@@ -16,7 +16,7 @@ todoistToken='72c10592f98d5a6c605a591d5a72b97ddc137f3b'
 #todoistToken='f740e16f33a1c7f76846f45474d156823f039a8f'
 projectID='1054422'
 #projectID='108537458'
-proxy={"http":"127.0.0.1:8087"}
+proxy={"http":"http://127.0.0.1:8087"}
 
 
 def getDoubanByIMDBID(IMDBID):
