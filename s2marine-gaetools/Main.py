@@ -23,23 +23,31 @@ class mainUpdate(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.out.write('update')
 
-class test(webapp2.RequestHandler):
+class testConnection(webapp2.RequestHandler):
     def get(self):
-        from google.appengine.api import urlfetch
-        import urllib
-        import logging
-        hub_url = 'https://pubsubhubbub.appspot.com/'
-        hubUrl = self.request.get('url')
-        data = urllib.urlencode({
-            'hub.url': hubUrl,
-            'hub.mode': 'publish'})
-        response = urlfetch.fetch(hub_url, data, urlfetch.POST)
-        logging.info("url is %s code is %d" % (hubUrl, response.status_code))
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.out.write("url is %s code is %d" % (hubUrl, response.status_code))
+        import requests
+        url = self.request.get('url')
+        html = requests.get(url)
+        self.response.out.write(html.content)
+        
+class testConnection1(webapp2.RequestHandler):
+    def get(self):
+        import requests
+        url = u'http://cyjwb.jmu.edu.cn/lists.asp?lbm=%CD%A8%D6%AA%B9%AB%B8%E6'
+        html = requests.get(url)
+        self.response.out.write(html.content)
+
+class testConnection2(webapp2.RequestHandler):
+    def get(self):
+        import requests
+        url = u'http://chengyi.jmu.edu.cn/NewsList.aspx?level=2&type=通知通告'
+        html = requests.get(url)
+        self.response.out.write(html.content)
 
 app = webapp2.WSGIApplication([
-                               ('/test', test),
+                               ('/testConnection', testConnection),
+                               ('/testConnection1', testConnection1),
+                               ('/testConnection2', testConnection2),
                                ('/RSS/cronUpdate', pageRSSCronUpdate),
                                ('/RSS/BilibiliSP', pageBilibiliSP),
                                ('/RSS/bilibiliSP', page410),
