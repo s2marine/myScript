@@ -77,6 +77,7 @@ class RSSChengyiTimetable(RSSObject):
             table = self.getWeb(info)
         except requests.exceptions.ConnectionError:
             logging.info("诚毅课表出错")
+            return
         strClass = self.analyzeWeb(table)
 
         self.RSSData['title'] = u'诚毅'+self.urlArgs['class']+u'课程表'
