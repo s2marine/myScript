@@ -11,6 +11,7 @@ from pageBilibili import pageBilibili
 from pageDuanziEveryday import pageDuanziEveryday
 from pageChengyi import pageChengyi
 from pageChengyiTimetable import pageChengyiTimetable
+from pageJandan import pageJandan
 from pagePushCheck import pagePushCheck
 
 class pageMain(webapp2.RequestHandler):
@@ -41,6 +42,7 @@ class testConnection(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
                                ('/testConnection', testConnection),
+                               ('/RSS/Jandan', pageJandan),
                                ('/RSS/cronUpdate', pageRSSCronUpdate),
                                ('/RSS/BilibiliSP', pageBilibiliSP),
                                ('/RSS/bilibiliSP', page410),
