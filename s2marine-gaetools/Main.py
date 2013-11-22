@@ -26,28 +26,21 @@ class mainUpdate(webapp2.RequestHandler):
 class testConnection(webapp2.RequestHandler):
     def get(self):
         import requests
-        url = self.request.get('url')
-        html = requests.get(url)
-        self.response.out.write(html.content)
-        
-class testConnection1(webapp2.RequestHandler):
-    def get(self):
-        import requests
-        url = u'http://cyjwb.jmu.edu.cn/lists.asp?lbm=%CD%A8%D6%AA%B9%AB%B8%E6'
-        html = requests.get(url)
-        self.response.out.write(html.content)
-
-class testConnection2(webapp2.RequestHandler):
-    def get(self):
-        import requests
-        url = u'http://chengyi.jmu.edu.cn/NewsList.aspx?level=2&type=通知通告'
-        html = requests.get(url)
-        self.response.out.write(html.content)
+        from google.appengine.api import urlfetch
+        urlfetch.set_default_fetch_deadline(60)
+        urls = []
+        urls.append(u'http://cyjwb.jmu.edu.cn/lists.asp?lbm=%CD%A8%D6%AA%B9%AB%B8%E6')
+        urls.append(u'http://chengyi.jmu.edu.cn/NewsList.aspx?level=2&type=通知通告')
+        urls.append(u'http://cytyjys.jmu.edu.cn/Info/?id=2')
+        urls.append("http://cyjwgl.jmu.edu.cn/ViewSchedule/ViewClassSchedule.aspx")
+        for url in urls:
+            s = requests.session()
+            r = s.get(url)
+            src = r.content
+            self.response.out.write(url+'<br/>'+str(r.ok)+'<br/>')
 
 app = webapp2.WSGIApplication([
                                ('/testConnection', testConnection),
-                               ('/testConnection1', testConnection1),
-                               ('/testConnection2', testConnection2),
                                ('/RSS/cronUpdate', pageRSSCronUpdate),
                                ('/RSS/BilibiliSP', pageBilibiliSP),
                                ('/RSS/bilibiliSP', page410),
