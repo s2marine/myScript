@@ -49,12 +49,11 @@ class RSSJandan(RSSObject):
         sumTimes = 0
         self.links = links = {}
         for author in authors:
-            title = author.text #.encode('utf-8')
+            title = author.text
             voteId = int(self.getVoteIdFromMain(author.findNext('div', attrs={"class":"vote votehot"}).get("id")))
-            if u"无聊图" in title:
+            link = author.find('a').get('href')
+            if link=="http://jandan.net/pic":
                 link = self.getLink(voteId)
-            else:
-                link = author.find('a').get('href')
             comment = author.findNext('div', attrs={"class":"acv_comment"})
             for i in comment.findAll('img'):
                 i.insert_before(BeautifulSoup("<br/>"))
