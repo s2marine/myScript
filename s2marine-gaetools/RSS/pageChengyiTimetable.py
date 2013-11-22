@@ -34,6 +34,10 @@ class RSSChengyiTimetable(RSSObject):
 
     def getWeb(self, info):
         s = requests.session()
+
+        from google.appengine.api import urlfetch
+        urlfetch.set_default_fetch_deadline(60)
+
         r = s.get("http://cyjwgl.jmu.edu.cn/ViewSchedule/ViewClassSchedule.aspx")
         #open('t.html', 'w').write(r.content)
         soup = BeautifulSoup(r.content)
@@ -73,6 +77,10 @@ class RSSChengyiTimetable(RSSObject):
             semester += '1'
         info = {'semester': semester,
                 'class': self.urlArgs['class']}
+
+        from google.appengine.api import urlfetch
+        urlfetch.set_default_fetch_deadline(45)
+
         try:
             table = self.getWeb(info)
         except requests.exceptions.ConnectionError:
