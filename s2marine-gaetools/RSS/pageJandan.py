@@ -47,16 +47,20 @@ class RSSJandan(RSSObject):
         items = self.RSSData['items'] = []
         times = 0
         sumTimes = 0
+        self.links = links = {}
         for author in authors:
             title = author.text #.encode('utf-8')
-            link = author.find('a').get('href')
-            voteId = author.findNext('div', attrs={"class":"vote votehot"}).get("id")
+            voteId = int(self.getVoteIdFromMain(author.findNext('div', attrs={"class":"vote votehot"}).get("id")))
+            if u"无聊图" in title:
+                link = self.getLink(voteId)
+            else:
+                link = author.find('a').get('href')
             comment = author.findNext('div', attrs={"class":"acv_comment"})
             for i in comment.findAll('img'):
                 i.insert_before(BeautifulSoup("<br/>"))
                 i.insert_after(BeautifulSoup("<br/>"))
             description = comment.prettify()
-            guid = voteId
+            guid = link
             pubDate = datetime.datetime.now()
             pubDate -= datetime.timedelta(hours=8)
             items.append({
@@ -85,3 +89,38 @@ class RSSJandan(RSSObject):
         if len(self.RSSDatas)+times>self.MAXItems:
             self.db['del'] += self.RSSDatas[self.MAXItems-len(self.RSSDatas)-times:]
 
+    def getVoteIdFromMain(self, string):
+        return int(re.search('(?<=-2)\d+$', string).group())
+
+    def getVoteIdNormal(self, string):
+        return int(re.search('(?<=-)\d+$', string).group())
+
+    def getPageNum(self, string):
+        return int(re.search('(?<=page-)\d+', string).group())
+
+    def getLink(self, voteId):
+        if voteId in self.links:
+            return self.links[voteId]
+        elif self.links and (voteId>min(self.links.keys()) or len(self.links)>100):
+            return "http://jandan.net/pic"
+        else:
+            self.getLinksFromPage()
+            return self.getLink(voteId)
+
+    def getLinksFromPage(self):
+        if self.links=={}:
+            url = "http://jandan.net/pic"
+        else:
+            minLink = self.links[min(self.links.keys())]
+            url = "http://jandan.net/pic/page-"+str(self.getPageNum(minLink)-1)
+        self.getPageLink(url)
+
+    def getPageLink(self, page):
+        r = requests.get(page)
+        src = r.content
+        r.close()
+        righttexts = BeautifulSoup(src).findAll('span', attrs={'class':'righttext'})
+        for righttext in righttexts:
+            a = righttext.find('a')
+            link = a['href']
+            self.links[int(self.getVoteIdNormal(link))] = link
